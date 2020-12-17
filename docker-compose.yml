@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+      target: build
+    volumes:
+      - ./src/app:/go/test-chat/src/app
+    command: realize start --run --no-config
+    ports:
+    - 8000:8000
+
+  proto:
+    build:
+      context: .
+      dockerfile: docker/proto/Dockerfile
+    command: ./protoc.sh
+    volumes:
+      - ./proto:/proto
+      - ./client:/output/client
+      - ./client/google/protobuf:/output/client/google/protobuf
+      - ./src/app/grpc:/output/server
